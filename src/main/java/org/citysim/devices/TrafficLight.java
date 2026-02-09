@@ -3,16 +3,18 @@ package org.citysim.devices;
 import org.citysim.events.CityEventType;
 import org.citysim.factory.DeviceType;
 import org.citysim.strategies.traffic.TrafficStrategy;
+import org.citysim.util.ConfigLoader;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class TrafficLight extends CityDevice{
+    private static final int INTERVAL_SECONDS = ConfigLoader.getInt("traffic.int.sec");
     private volatile TrafficLightState state = TrafficLightState.RED;
     private TrafficStrategy strategy;
 
     public TrafficLight(String id) {
-        super(id,1, DeviceType.TRAFFIC_LIGHT);
+        super(id,INTERVAL_SECONDS, DeviceType.TRAFFIC_LIGHT);
     }
 
     public void setStrategy(TrafficStrategy strategy){

@@ -2,12 +2,16 @@ package org.citysim.devices;
 
 import org.citysim.events.CityEventType;
 import org.citysim.factory.DeviceType;
+import org.citysim.util.ConfigLoader;
 
 public class StreetLight extends CityDevice implements LightSensor{
+    private static final int INTERVAL_SECONDS = ConfigLoader.getInt("street.int.sec");
+    private static final int DARK_START = ConfigLoader.getInt("street.dark.start");
+    private static final int DARK_END = ConfigLoader.getInt("street.dark.end");
     private int hour = 0;
 
     public StreetLight(String id){
-        super(id, 10, DeviceType.STREET_LIGHT);
+        super(id, INTERVAL_SECONDS, DeviceType.STREET_LIGHT);
     }
 
     @Override
@@ -22,6 +26,6 @@ public class StreetLight extends CityDevice implements LightSensor{
 
     @Override
     public boolean isDark(int hour) {
-        return hour >= 20 || hour < 6;
+        return hour >= DARK_START || hour < DARK_END;
     }
 }

@@ -21,6 +21,6 @@ public class AverageStrategy implements AirAnalysisStrategy{
             weight++;
         }
 
-        return weightedSum / totalWeight;
+        return totalWeight == 0 ? 0 : weightedSum / totalWeight;
     }
 }

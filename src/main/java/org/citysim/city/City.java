@@ -3,6 +3,7 @@ package org.citysim.city;
 import org.citysim.concurrent.CityThreadPool;
 import org.citysim.devices.*;
 import org.citysim.events.CityEventType;
+import org.citysim.factory.DeviceType;
 import org.citysim.observers.CityEventListener;
 
 import java.util.ArrayList;
@@ -49,8 +50,8 @@ public class City {
 
     public void startSimulation(){
         for(CityDevice device : devices){
-            if (device instanceof TrafficLight) {
-                ((TrafficLight) device).performAction();
+            if (device.getType() == DeviceType.TRAFFIC_LIGHT) {
+                device.performAction();
             } else {
                 device.schedule(pool);
             }

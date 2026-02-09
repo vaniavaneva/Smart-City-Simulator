@@ -1,6 +1,7 @@
 package org.citysim.strategies.traffic;
 
 import org.citysim.devices.TrafficLightState;
+import org.citysim.util.ConfigLoader;
 
 import static java.lang.Math.log;
 
@@ -28,7 +29,9 @@ public class AdaptiveTrafficStrategy implements TrafficStrategy{
     }
 
     private int getCurrentVehicleCount(){
-        return 5 + (int)(Math.random() * 40); // 5-45
+        int vehicleBase = ConfigLoader.getInt("traffic.vehicle.base");
+        int vehicleRange = ConfigLoader.getInt("traffic.vehicle.range");
+        return vehicleBase + (int)(Math.random() * vehicleRange); // 5-45
     }
 
     private double calculateWeightedVehicleCount(int currentCount){

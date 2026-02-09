@@ -10,12 +10,15 @@ import java.util.Objects;
 
 public class AirSensor extends CityDevice{
     private final Deque<Double> history = new LinkedList<>();
-    private final int MAX_HISTORY = ConfigLoader.getInt("max.history");
+    private final int MAX_HISTORY = ConfigLoader.getInt("air.max.history");
+    private static final int INTERVAL_SECONDS = ConfigLoader.getInt("air.int.sec");
     private static final double AIR_QUALITY_THRESHOLD = ConfigLoader.getDouble("air.quality.threshold");
+    private static final int AIR_PM_BASE = ConfigLoader.getInt("air.pm.base");
+    private static final int AIR_PM_RANGE = ConfigLoader.getInt("air.pm.range");
     private AirAnalysisStrategy strategy;
 
     public AirSensor(String id) {
-        super(id, 15, DeviceType.AIR_SENSOR);
+        super(id, INTERVAL_SECONDS, DeviceType.AIR_SENSOR);
     }
 
     public void setStrategy(AirAnalysisStrategy strategy) {
@@ -24,7 +27,7 @@ public class AirSensor extends CityDevice{
 
     @Override
     public synchronized void performAction() {
-        double pm25 = 20 + Math.random() * 60;
+        double pm25 = AIR_PM_BASE + Math.random() * AIR_PM_RANGE;
 
         history.addLast(pm25);
         if (history.size() > MAX_HISTORY) {

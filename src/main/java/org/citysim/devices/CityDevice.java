@@ -5,6 +5,7 @@ import org.citysim.concurrent.CityThreadPool;
 import org.citysim.events.CityEventType;
 import org.citysim.factory.DeviceType;
 
+import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -16,8 +17,8 @@ public abstract class CityDevice {
     protected ScheduledFuture<?> future;
 
     public CityDevice(String id, int intervalSeconds, DeviceType type) {
-        this.id = id;
-        this.type = type;
+        this.id = Objects.requireNonNull(id, "Device id cannot be null");
+        this.type = Objects.requireNonNull(type, "Device type cannot be null");
         if(intervalSeconds <= 0) throw new IllegalArgumentException("Seconds can't be <= 0");
         this.intervalSeconds = intervalSeconds;
     }
@@ -31,11 +32,15 @@ public abstract class CityDevice {
     }
 
     public void setCity(City city) {
-        this.city = city;
+        this.city = Objects.requireNonNull(city, "City cannot be null");
     }
 
     public City getCity(){
         return city;
+    }
+
+    public DeviceType getType() {
+        return type;
     }
 
     public void updateStatus(String message) {
@@ -44,11 +49,11 @@ public abstract class CityDevice {
         }
     }
 
-    public void stop() {
+    /*public void stop() {
         if(future != null && !future.isCancelled()) {
             future.cancel(false);
         }
-    }
+    }*/
 
     public void schedule(CityThreadPool pool) {
         int initialDelay = (int)(Math.random() * intervalSeconds);

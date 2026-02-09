@@ -1,8 +1,8 @@
-All traffic lights changed 0 times.
+All traffic lights changed 4 times.
 
 Street lights were ON for NaN% of the simulation.
 
-Bikes were rented 0 times.
+Bikes were rented 1 times.
 
 Bikes were returned 0 times.
 

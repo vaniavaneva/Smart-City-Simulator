@@ -26,12 +26,18 @@ public class SimulationEngine {
     private static final Logger logger = LoggerFactory.getLogger("SIMULATIONENGINE");
 
     private static int simulationDuration = ConfigLoader.getInt("simulation.duration");
+    private static int simulationTimeout = ConfigLoader.getInt("simulation.timeout");
     private int threadPoolSize;
 
     private City city;
     private CityThreadPool pool;
     private DataLogger dataLogger;
     private DeviceFactory factory;
+
+    private int minGreenDuration, maxGreenDuration, baseVehicleThreshold, scalingFactor;
+    private int minCapacity, maxCapacity;
+    private int minBikes, maxBikes;
+    private int minChargers, maxChargers;
 
     private TrafficLight tl1, tl2, tl3, tl4;
     private AirSensor as1, as2, as3, as4;
@@ -51,6 +57,18 @@ public class SimulationEngine {
         city.addListener(new AlertSystem());
         city.addListener(dataLogger);
 
+        minGreenDuration = ConfigLoader.getInt("traffic.adapt.min");
+        maxGreenDuration = ConfigLoader.getInt("traffic.adapt.max");
+        baseVehicleThreshold = ConfigLoader.getInt("traffic.vehicle.threshold");
+        scalingFactor = ConfigLoader.getInt("traffic.scale.factor");
+
+        minCapacity = ConfigLoader.getInt("bike.min.capacity");
+        maxCapacity = ConfigLoader.getInt("bike.max.capacity");
+        minBikes = ConfigLoader.getInt("bike.min.bikes");
+        maxBikes = ConfigLoader.getInt("bike.max.bikes");
+        minChargers = ConfigLoader.getInt("bike.min.chargers");
+        maxChargers = ConfigLoader.getInt("bike.max.chargers");
+
         tl1 = (TrafficLight) factory.create(DeviceType.TRAFFIC_LIGHT, "TL-01");
         tl2 = (TrafficLight) factory.create(DeviceType.TRAFFIC_LIGHT, "TL-02");
         tl3 = (TrafficLight) factory.create(DeviceType.TRAFFIC_LIGHT, "TL-03");
@@ -67,9 +85,9 @@ public class SimulationEngine {
         bs1 = (BikeStation) factory.create(DeviceType.BIKE_STATION, "BS-01");
         bs2 = (BikeStation) factory.create(DeviceType.BIKE_STATION, "BS-02");
 
-        tl1.setStrategy(new AdaptiveTrafficStrategy(5, 15, 2, 4));
+        tl1.setStrategy(new AdaptiveTrafficStrategy(minGreenDuration, maxGreenDuration, baseVehicleThreshold, scalingFactor));
         tl2.setStrategy(new FixedCycleStrategy());
-        tl3.setStrategy(new AdaptiveTrafficStrategy(5, 15, 2, 4));
+        tl3.setStrategy(new AdaptiveTrafficStrategy(minGreenDuration, maxGreenDuration, baseVehicleThreshold, scalingFactor));
         tl4.setStrategy(new FixedCycleStrategy());
 
         as1.setStrategy(new AverageStrategy());
@@ -77,13 +95,13 @@ public class SimulationEngine {
         as3.setStrategy(new AverageStrategy());
         as4.setStrategy(new PeakDetectionStrategy());
 
-        bs1.setCapacity(8);
-        bs1.setBikesAvailable(5);
-        bs1.setChargers(2);
+        bs1.setCapacity(minCapacity, maxCapacity);
+        bs1.setBikesAvailable(minBikes, maxBikes);
+        bs1.setChargers(minChargers, maxChargers);
 
-        bs2.setCapacity(4);
-        bs2.setBikesAvailable(4);
-        bs2.setChargers(3);
+        bs2.setCapacity(minCapacity, maxCapacity);
+        bs2.setBikesAvailable(minBikes, maxBikes);
+        bs2.setChargers(minChargers, maxChargers);
 
         city.addDevice(tl1);
         city.addDevice(tl2);
@@ -112,7 +130,7 @@ public class SimulationEngine {
     }
 
     private void stop(){
-        pool.safeShutdown(30, TimeUnit.SECONDS);
+        pool.safeShutdown(simulationTimeout, TimeUnit.SECONDS);
         logger.info("Simulation stopped.");
         dataLogger.saveInfo();
     }

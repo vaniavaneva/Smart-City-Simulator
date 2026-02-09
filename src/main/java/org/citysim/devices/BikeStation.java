@@ -16,26 +16,44 @@ public class BikeStation extends CityDevice{
     private final AtomicInteger chargers = new AtomicInteger(0);
     private final List<ScheduledFuture<?>> chargingSlots = new CopyOnWriteArrayList();
 
+    private static final int INTERVAL_SECONDS = ConfigLoader.getInt("bike.int.sec");
     private static final double RENT_PROBABILITY = ConfigLoader.getDouble("bike.rent.probability");
     private static final double RETURN_PROBABILITY = ConfigLoader.getDouble("bike.rent.probability");
-    private static final int MIN_CHARGE_TIME_SEC = ConfigLoader.getInt("min.charge");
-    private static final int MAX_CHARGE_TIME_SEC = ConfigLoader.getInt("max.charge");
+    private static final int MIN_CHARGE_TIME_SEC = ConfigLoader.getInt("bike.min.charge");
+    private static final int MAX_CHARGE_TIME_SEC = ConfigLoader.getInt("bike.max.charge");
 
     public BikeStation(String id) {
-        super(id, 17, DeviceType.BIKE_STATION);
+        super(id, INTERVAL_SECONDS, DeviceType.BIKE_STATION);
     }
 
-    public void setBikesAvailable(int bikes){
-        if(bikes > capacity) throw new IllegalArgumentException("Available bikes should be <= capacity");
+    protected double random() {
+        return Math.random();
+    }
+
+    public void setBikesAvailable(int min, int max) {
+        if (min > capacity) {
+            throw new IllegalArgumentException("Min bikes should be < capacity");
+        }
+
+        int upper = Math.min(max, capacity);
+        int bikes = (int)(min + random() * (upper - min + 1));
+
         bikesAvailable.set(bikes);
     }
 
-    public void setCapacity(int capacity){
-        if(capacity < bikesAvailable.get()) throw new IllegalArgumentException("Capacity should be >= bikes available");
-        this.capacity = capacity;
+    public void setCapacity(int min, int max) {
+        int currentBikes = bikesAvailable.get();
+
+        if (max < currentBikes) {
+            throw new IllegalArgumentException("Max capacity should be > min bikes");
+        }
+
+        int lower = Math.max(min, currentBikes);
+        capacity = (int)(lower + random() * (max - lower + 1));
     }
 
-    public void setChargers(int chargers){
+    public void setChargers(int min, int max){
+        int chargers = (int)(min + random() * (max - min + 1));
         if(chargers <= 0) throw new IllegalArgumentException("Chargers can't be <= 0");
         this.chargers.set(chargers);
     }
@@ -54,7 +72,7 @@ public class BikeStation extends CityDevice{
 
     @Override
     public synchronized void performAction() {
-        double chance = Math.random(); //0-1
+        double chance = random(); //0-1
 
         if(chance < RENT_PROBABILITY){ //40% rent
             if(bikesAvailable.get() > 0){
@@ -107,12 +125,12 @@ public class BikeStation extends CityDevice{
         chargingSlots.add(future);
     }
 
-    public void cancelAllCharging() {
+    /*public void cancelAllCharging() {
         for(ScheduledFuture<?> future : chargingSlots) {
             if(!future.isDone()) {
                 future.cancel(false);
             }
         }
         chargingSlots.clear();
-    }
+    }*/
 }

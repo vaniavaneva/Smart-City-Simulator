@@ -47,7 +47,7 @@ public class DataLogger implements CityEventListener {
 
     public void saveInfo(){
         clearFile();
-        double percent = (streetLightOnCount / (double) streetLightTotalEvents) * 100.0;
+        double percent = streetLightTotalEvents == 0 ? 0 : (streetLightOnCount / (double) streetLightTotalEvents) * 100.0;
         write("All traffic lights changed " + trafficLightChanges + " times.\n\n");
         write("Street lights were ON for " + String.format("%.2f", percent) + "% of the simulation.\n\n");
         write("Bikes were rented " + timesBikesRented + " times.\n\n");
