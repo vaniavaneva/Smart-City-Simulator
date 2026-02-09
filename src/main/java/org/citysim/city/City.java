@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class City {
-    private final List<CityDevice> devices = new ArrayList<>();
+    private final List<CityDevice> devices = new CopyOnWriteArrayList<>();
     private final List<CityEventListener> listeners = new CopyOnWriteArrayList<>();
     private CityThreadPool pool;
 
@@ -20,6 +20,8 @@ public class City {
     }
 
     public CityThreadPool getThreadPool() {
+        if (pool == null)
+            throw new IllegalStateException("Thread pool not set");
         return pool;
     }
 
@@ -29,7 +31,7 @@ public class City {
     }
 
     public List<CityDevice> getAllDevices() {
-        return new ArrayList<>(devices);
+        return List.copyOf(devices);
     }
 
     public void addListener(CityEventListener listener) {

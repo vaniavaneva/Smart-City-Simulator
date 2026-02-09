@@ -1,12 +1,31 @@
-All traffic lights changed 4 times.
+All traffic lights changed 72 times.
 
-Street lights were ON for NaN% of the simulation.
+Street lights were ON for 71,43% of the simulation.
 
-Bikes were rented 1 times.
+Bikes were rented 5 times.
 
-Bikes were returned 0 times.
+Bikes were returned 4 times.
 
-Bikes were charged 0 times.
+Bikes were charged 2 times.
 
-Alerts occurred: 0
+Alerts occurred: 19
 
+	BS-02 Charger levels low (1)
+	BS-02 Charger levels low (1)
+	AS-04 Poor air quality PM2.5=77,36
+	AS-02 Poor air quality PM2.5=55,62
+	AS-04 Poor air quality PM2.5=55,42
+	AS-02 Poor air quality PM2.5=76,70
+	AS-04 Poor air quality PM2.5=30,09
+	AS-02 Poor air quality PM2.5=69,57
+	AS-04 Poor air quality PM2.5=27,15
+	BS-02 Station full, cannot return bike
+	AS-02 Poor air quality PM2.5=20,18
+	AS-04 Poor air quality PM2.5=35,79
+	BS-02 Station full, cannot return bike
+	BS-01 Bike levels low (1)
+	AS-02 Poor air quality PM2.5=20,87
+	AS-04 Poor air quality PM2.5=33,75
+	AS-02 Poor air quality PM2.5=76,90
+	BS-02 Station full, cannot return bike
+	AS-04 Poor air quality PM2.5=66,00

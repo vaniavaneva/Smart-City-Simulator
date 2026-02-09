@@ -120,7 +120,7 @@ public class SimulationEngine {
 
         try {
             Thread.sleep(
-                    SimulationEngine.simulationDuration * 1000L
+                    SimulationEngine.simulationDuration
             );
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

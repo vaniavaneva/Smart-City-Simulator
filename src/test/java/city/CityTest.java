@@ -32,8 +32,8 @@ public class CityTest {
         city.addDevice(new TestDevice());
 
         List<CityDevice> list = city.getAllDevices();
-        list.clear();
 
+        assertThrows(UnsupportedOperationException.class, list::clear);
         assertEquals(1, city.getAllDevices().size());
     }
 
@@ -75,7 +75,7 @@ public class CityTest {
         boolean scheduled = false;
 
         TestDevice() {
-            super("testDevice", 1, null);
+            super("testDevice", 1, DeviceType.AIR_SENSOR);
         }
 
         @Override public void performAction() {}

@@ -35,8 +35,11 @@ public abstract class CityDevice {
         this.city = Objects.requireNonNull(city, "City cannot be null");
     }
 
-    public City getCity(){
-        return city;
+    public City getCity() {
+        City c = city;
+        if (c == null)
+            throw new IllegalStateException("Device not attached to a city");
+        return c;
     }
 
     public DeviceType getType() {
@@ -44,9 +47,7 @@ public abstract class CityDevice {
     }
 
     public void updateStatus(String message) {
-        if (city != null) {
-            city.notifyListeners(this, CityEventType.STATUS, message);
-        }
+        getCity().notifyListeners(this, CityEventType.STATUS, message);
     }
 
     /*public void stop() {
@@ -56,7 +57,9 @@ public abstract class CityDevice {
     }*/
 
     public void schedule(CityThreadPool pool) {
-        int initialDelay = (int)(Math.random() * intervalSeconds);
+        Objects.requireNonNull(pool, "Thread pool cannot be null");
+
+        int initialDelay = (int) (Math.random() * intervalSeconds);
 
         future = pool.getScheduler().scheduleAtFixedRate(
                 this::performAction,

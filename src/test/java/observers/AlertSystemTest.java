@@ -2,6 +2,7 @@ package observers;
 
 import org.citysim.devices.CityDevice;
 import org.citysim.events.CityEventType;
+import org.citysim.factory.DeviceType;
 import org.citysim.observers.AlertSystem;
 import org.citysim.util.LoggerFactory;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +51,7 @@ public class AlertSystemTest {
     }
     static class TestDevice extends CityDevice {
         TestDevice() {
-            super("test", 1, null);
+            super("test", 1, DeviceType.AIR_SENSOR);
         }
 
         @Override

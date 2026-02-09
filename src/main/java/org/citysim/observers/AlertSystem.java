@@ -12,7 +12,7 @@ public class AlertSystem implements CityEventListener{
     @Override
     public void onEvent(CityDevice device, CityEventType type, String message) {
         if (type == CityEventType.ALERT) {
-            logger.warning("[ALERT] " + device.getId() + " " + message);
+            logger.warning("[ALERT] {" + device.getId() + "} " + message);
         }
     }
 }
