@@ -14,6 +14,9 @@ public class StreetLight extends CityDevice implements LightSensor{
         super(id, INTERVAL_SECONDS, DeviceType.STREET_LIGHT);
     }
 
+    /**
+     * Advances the simulated time and emits light status event
+     */
     @Override
     public void performAction(){
         hour = (hour + 1) % 24;
@@ -24,6 +27,11 @@ public class StreetLight extends CityDevice implements LightSensor{
                 "Hour: " + hour + " | Light " + (on ? "ON" : "OFF"));
     }
 
+    /**
+     * Determines whether the hour is dark
+     * @param hour - simulated hour (0–23)
+     * @return true if lights should be on
+     */
     @Override
     public boolean isDark(int hour) {
         return hour >= DARK_START || hour < DARK_END;

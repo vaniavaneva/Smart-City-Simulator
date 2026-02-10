@@ -5,6 +5,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LoggerFactory {
+
+    /**
+     * Creates or retrieves configured logger instance
+     * @param name - logger name
+     * @return configured logger with color output
+     */
     public static Logger getLogger(String name) {
         Logger logger = Logger.getLogger(name);
         logger.setUseParentHandlers(false);

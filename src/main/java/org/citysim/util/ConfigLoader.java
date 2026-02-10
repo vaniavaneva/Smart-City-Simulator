@@ -20,6 +20,12 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Gets positive integer configuration value
+     * @param key - configuration key
+     * @return parsed positive integer
+     * @throws RuntimeException if missing, invalid, or negative
+     */
     public static int getInt(String key) {
         String value = getRequired(key);
         int parsed;
@@ -34,6 +40,12 @@ public class ConfigLoader {
         return parsed;
     }
 
+    /**
+     * Gets positive double configuration value
+     * @param key - configuration key
+     * @return parsed positive double
+     * @throws RuntimeException if missing, invalid, or negative
+     */
     public static double getDouble(String key) {
         String value = getRequired(key);
         double parsed;
@@ -48,6 +60,12 @@ public class ConfigLoader {
         return parsed;
     }
 
+    /**
+     * Fetches a required raw configuration value
+     * @param key - configuration key
+     * @return not empty value
+     * @throws RuntimeException if missing or empty
+     */
     private static String getRequired(String key) {
         String value = props.getProperty(key);
         if (value == null) {
@@ -60,6 +78,10 @@ public class ConfigLoader {
         return value;
     }
 
+    /**
+     * Validates all required configuration keys exist
+     * @throws RuntimeException if any key is missing
+     */
     private static void validate() {
         String[] keys = {
                 "simulation.duration",

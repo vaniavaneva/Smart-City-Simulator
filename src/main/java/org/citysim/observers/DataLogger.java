@@ -27,10 +27,20 @@ public class DataLogger implements CityEventListener {
     private int timesBikesReturned = 0;
     private int timesBikesCharged = 0;
 
+    /**
+     * Creates a new data logger
+     * @param filePath - destination file path
+     */
     public DataLogger(String filePath) {
         this.logFile = ensureFileExists(filePath);
     }
 
+    /**
+     * Processes incoming simulation events
+     * @param device - the device generating event
+     * @param type - event type
+     * @param message - message from device
+     */
     @Override
     public void onEvent(CityDevice device, CityEventType type, String message) {
         switch(type) {
@@ -45,6 +55,9 @@ public class DataLogger implements CityEventListener {
         }
     }
 
+    /**
+     * Writes statistics to log file
+     */
     public void saveInfo(){
         clearFile();
         double percent = streetLightTotalEvents == 0 ? 0 : (streetLightOnCount / (double) streetLightTotalEvents) * 100.0;
@@ -59,6 +72,11 @@ public class DataLogger implements CityEventListener {
         }
     }
 
+    /**
+     * Confirms file exists
+     * @param path - path to file
+     * @return file
+     */
     private File ensureFileExists(String path) {
         File f = new File(path);
         if (!f.exists()) {
@@ -71,6 +89,9 @@ public class DataLogger implements CityEventListener {
         return f;
     }
 
+    /**
+     * Clears file before writing
+     */
     private void clearFile() {
         try (FileWriter fw = new FileWriter(logFile, false)) { // false = overwrite
             fw.write("");
@@ -79,6 +100,11 @@ public class DataLogger implements CityEventListener {
         }
     }
 
+
+    /**
+     * Writes in file if logging enabled
+     * @param text - text to write in file
+     */
     private void write(String text) {
         if(!loggingEnabled) return;
         try (FileWriter fw = new FileWriter(logFile, true)) {

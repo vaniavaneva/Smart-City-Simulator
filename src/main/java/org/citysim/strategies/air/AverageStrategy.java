@@ -3,6 +3,11 @@ package org.citysim.strategies.air;
 import java.util.Deque;
 
 public class AverageStrategy implements AirAnalysisStrategy{
+    /**
+     * Calculates weighted air quality score from measurements
+     * @param measurements - air quality readings from oldest to newest
+     * @return weighted average of measurements or 0 if no valid data
+     */
     @Override
     public double analyzeQuality(Deque<Double> measurements) {
         if(measurements == null || measurements.isEmpty()) return 0;

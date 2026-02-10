@@ -21,10 +21,18 @@ public class AirSensor extends CityDevice{
         super(id, INTERVAL_SECONDS, DeviceType.AIR_SENSOR);
     }
 
+    /**
+     * Sets the air quality analysis strategy
+     * @param strategy - analysis algorithm
+     * @throws NullPointerException if strategy is null
+     */
     public void setStrategy(AirAnalysisStrategy strategy) {
         this.strategy = Objects.requireNonNull(strategy, "Strategy cannot be null");
     }
 
+    /**
+     * Generates new air measurement and evaluates air quality
+     */
     @Override
     public synchronized void performAction() {
         double pm25 = AIR_PM_BASE + Math.random() * AIR_PM_RANGE;

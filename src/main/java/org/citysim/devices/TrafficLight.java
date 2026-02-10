@@ -17,10 +17,18 @@ public class TrafficLight extends CityDevice{
         super(id,INTERVAL_SECONDS, DeviceType.TRAFFIC_LIGHT);
     }
 
+    /**
+     * Assigns the traffic strategy
+     * @param strategy strategy implementation
+     * @throws NullPointerException if strategy is null
+     */
     public void setStrategy(TrafficStrategy strategy){
         this.strategy = Objects.requireNonNull(strategy, "Strategy cannot be null");
     }
 
+    /**
+     * Advances the traffic light state, schedules next change
+     */
     @Override
     public void performAction() {
         if(strategy == null) return;

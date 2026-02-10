@@ -16,6 +16,14 @@ public abstract class CityDevice {
     protected volatile int intervalSeconds;
     protected ScheduledFuture<?> future;
 
+    /**
+     * Creates new device with fixed execution interval
+     * @param id - unique device identifier
+     * @param intervalSeconds - execution interval in seconds (must be > 0)
+     * @param type - device type
+     * @throws NullPointerException if id or type is null
+     * @throws IllegalArgumentException if interval is negative
+     */
     public CityDevice(String id, int intervalSeconds, DeviceType type) {
         this.id = Objects.requireNonNull(id, "Device id cannot be null");
         this.type = Objects.requireNonNull(type, "Device type cannot be null");
@@ -31,10 +39,20 @@ public abstract class CityDevice {
         return id;
     }
 
+    /**
+     * Attaches this device to city
+     * @param city - owning city instance
+     * @throws NullPointerException if city is null
+     */
     public void setCity(City city) {
         this.city = Objects.requireNonNull(city, "City cannot be null");
     }
 
+    /**
+     * Returns the city this device belongs to
+     * @return attached city
+     * @throws IllegalStateException if device is not attached to a city
+     */
     public City getCity() {
         City c = city;
         if (c == null)
@@ -46,6 +64,10 @@ public abstract class CityDevice {
         return type;
     }
 
+    /**
+     * Notifies listeners for event
+     * @param message - message from device
+     */
     public void updateStatus(String message) {
         getCity().notifyListeners(this, CityEventType.STATUS, message);
     }
@@ -56,6 +78,11 @@ public abstract class CityDevice {
         }
     }*/
 
+    /**
+     * Schedules periodic execution of this device using thread pool
+     * @param pool - thread pool used for scheduling
+     * @throws NullPointerException if pool is null
+     */
     public void schedule(CityThreadPool pool) {
         Objects.requireNonNull(pool, "Thread pool cannot be null");
 
@@ -69,5 +96,9 @@ public abstract class CityDevice {
         );
     }
 
+
+    /**
+     * Performs one simulation step
+     */
     public abstract void performAction();
 }

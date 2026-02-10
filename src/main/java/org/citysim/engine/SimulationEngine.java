@@ -44,6 +44,12 @@ public class SimulationEngine {
     private StreetLight sl1, sl2;
     private BikeStation bs1, bs2;
 
+    /**
+     * Full system setup
+     * Initializes and runs the simulation
+     * Execution blocks the calling thread until the simulation completes or is interrupted
+     * If interrupted -> shutdowns safely
+     */
     public void start(){
         threadPoolSize = ConfigLoader.getInt("thread.pool.size");
 
@@ -129,6 +135,11 @@ public class SimulationEngine {
         stop();
     }
 
+    /**
+     * Stops the simulation
+     * Shutting down using a timeout-based safe shutdown
+     * Pending tasks are cancelled if exceed timeout
+     */
     private void stop(){
         pool.safeShutdown(simulationTimeout, TimeUnit.SECONDS);
         logger.info("Simulation stopped.");

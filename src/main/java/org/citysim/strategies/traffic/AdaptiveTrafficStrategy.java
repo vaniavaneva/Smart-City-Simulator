@@ -12,6 +12,13 @@ public class AdaptiveTrafficStrategy implements TrafficStrategy{
     private final double scalingFactor;
     private double historicalAverage = 0;
 
+    /**
+     * @param minGreenDuration - minimum allowed green duration in seconds (must be > 0)
+     * @param maxGreenDuration maximum allowed green duration in seconds (must be > min)
+     * @param baseVehicleThreshold base vehicle threshold used for scaling (must be > 0)
+     * @param scalingFactor factor controlling how aggressively the duration scales (must be > 0)
+     * @throws IllegalArgumentException if any parameter is invalid
+     */
     public AdaptiveTrafficStrategy(int minGreenDuration, int maxGreenDuration, int baseVehicleThreshold, double scalingFactor) {
         if (minGreenDuration <= 0 || maxGreenDuration <= minGreenDuration) {
             throw new IllegalArgumentException("Invalid duration: min must be > 0 and max > min");
@@ -28,17 +35,31 @@ public class AdaptiveTrafficStrategy implements TrafficStrategy{
         this.scalingFactor = scalingFactor;
     }
 
+    /**
+     * Generates vehicle count using configuration values
+     * @return number of vehicles currently waiting
+     */
     private int getCurrentVehicleCount(){
         int vehicleBase = ConfigLoader.getInt("traffic.vehicle.base");
         int vehicleRange = ConfigLoader.getInt("traffic.vehicle.range");
         return vehicleBase + (int)(Math.random() * vehicleRange); // 5-45
     }
 
+    /**
+     * Computes vehicle count using exponential weighting
+     * @param currentCount - latest measured vehicle count
+     * @return weighted vehicle count used for duration calculation
+     */
     private double calculateWeightedVehicleCount(int currentCount){
         historicalAverage = historicalAverage * 0.7 + currentCount * 0.3;
         return currentCount * 0.7 + historicalAverage * 0.3;
     }
 
+    /**
+     * Calculates next green light duration based of traffic state
+     * @param state - current traffic light color
+     * @return green duration in seconds, 1 sec for yellow
+     */
     @Override
     public int computeGreenTime(TrafficLightState state) {
         if (state == TrafficLightState.YELLOW) return 1;

@@ -10,6 +10,10 @@ public class ColorFormatter extends Formatter {
     private static final String RED = "\u001B[31m";
     private static final String WHITE = "\u001B[37m";
 
+    /**
+     * @param record - log record to be formatted
+     * @return colored formatted message string
+     */
     @Override
     public String format(LogRecord record) {
         String color = WHITE;

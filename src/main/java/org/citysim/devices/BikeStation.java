@@ -30,6 +30,12 @@ public class BikeStation extends CityDevice{
         return Math.random();
     }
 
+    /**
+     * Randomly initializes available bikes within range
+     * @param min - minimum bikes
+     * @param max - maximum bikes
+     * @throws IllegalArgumentException if exceeding capacity
+     */
     public void setBikesAvailable(int min, int max) {
         if (min > capacity) {
             throw new IllegalArgumentException("Min bikes should be < capacity");
@@ -41,6 +47,12 @@ public class BikeStation extends CityDevice{
         bikesAvailable.set(bikes);
     }
 
+    /**
+     * Randomly assigns station capacity within range
+     * @param min - minimum capacity
+     * @param max - maximum capacity
+     * @throws IllegalArgumentException if invalid bounds
+     */
     public void setCapacity(int min, int max) {
         int currentBikes = bikesAvailable.get();
 
@@ -52,6 +64,12 @@ public class BikeStation extends CityDevice{
         capacity = (int)(lower + random() * (max - lower + 1));
     }
 
+    /**
+     * Sets number of charging slots
+     * @param min - minimum chargers
+     * @param max - maximum chargers
+     * @throws IllegalArgumentException if chargers <= 0
+     */
     public void setChargers(int min, int max){
         int chargers = (int)(min + random() * (max - min + 1));
         if(chargers <= 0) throw new IllegalArgumentException("Chargers can't be <= 0");
@@ -70,6 +88,9 @@ public class BikeStation extends CityDevice{
         return chargers.get();
     }
 
+    /**
+     * Executes bike station event cycle
+     */
     @Override
     public synchronized void performAction() {
         double chance = random(); //0-1
@@ -110,6 +131,9 @@ public class BikeStation extends CityDevice{
         }
     }
 
+    /**
+     * Starts asynchronous charging of electric bike
+     */
     private void startCharging(){
         chargers.decrementAndGet();
         int chargeTime = (int)(Math.random() * (MAX_CHARGE_TIME_SEC - MIN_CHARGE_TIME_SEC + 1) + MIN_CHARGE_TIME_SEC); //20-30
