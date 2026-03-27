@@ -30,6 +30,10 @@ public class AirSensor extends CityDevice{
         this.strategy = Objects.requireNonNull(strategy, "Strategy cannot be null");
     }
 
+    public Deque<Double> getHistory() {
+        return history;
+    }
+
     /**
      * Generates new air measurement and evaluates air quality
      */

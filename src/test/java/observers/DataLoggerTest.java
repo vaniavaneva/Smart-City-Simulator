@@ -14,17 +14,20 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("DataLogger Test")
+@DisplayName("DataLogger test")
 public class DataLoggerTest {
+
     @TempDir
     Path tempDir;
 
-    @Test
-    @DisplayName("Triggers events, writes in file")
+    @Test @DisplayName("Triggers events, writes in file")
     void trigger_write() throws IOException {
+
         Path file = tempDir.resolve("log.txt");
         DataLogger logger = new DataLogger(file.toString());
-        TestDevice device = new TestDevice();
+        CityDevice device = new CityDevice("test", 1, DeviceType.AIR_SENSOR){
+            @Override public void performAction() {}
+        };
 
         logger.onEvent(device, CityEventType.TRAFFIC_LIGHT_CHANGE, "");
         logger.onEvent(device, CityEventType.BIKE_RENTED, "");
@@ -44,13 +47,5 @@ public class DataLoggerTest {
         assertTrue(output.contains("returned 1"));
         assertTrue(output.contains("charged 1"));
         assertTrue(output.contains("occurred: 1"));
-    }
-
-    static class TestDevice extends CityDevice{
-        TestDevice(){
-            super("test", 1, DeviceType.AIR_SENSOR);
-        }
-        @Override
-        public void performAction(){}
     }
 }

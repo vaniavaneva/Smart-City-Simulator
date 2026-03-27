@@ -17,16 +17,14 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Dashboard Test")
+@DisplayName("Dashboard test")
 public class DashboardTest {
 
-    @Test
-    @DisplayName("Logs only STATUS events")
+    @Test @DisplayName("Logs only STATUS events")
     void logsOnlyAlertEvents() {
+
         Dashboard system = new Dashboard();
-
         Logger logger = LoggerFactory.getLogger("DASHBOARD");
-
         List<String> logs = new ArrayList<>();
 
         Handler handler = new Handler() {
@@ -40,7 +38,9 @@ public class DashboardTest {
 
         logger.addHandler(handler);
 
-        CityDevice device = new DashboardTest.TestDevice();
+        CityDevice device = new CityDevice("test", 1, DeviceType.AIR_SENSOR) {
+            @Override public void performAction() {}
+        };
 
         system.onEvent(device, CityEventType.STATUS, "status");
         system.onEvent(device, CityEventType.ALERT, "alert");
@@ -49,14 +49,5 @@ public class DashboardTest {
 
         assertEquals(1, logs.size());
         assertTrue(logs.getFirst().contains("status"));
-    }
-
-    static class TestDevice extends CityDevice {
-        TestDevice() {
-            super("test", 1, DeviceType.AIR_SENSOR);
-        }
-
-        @Override
-        public void performAction() {}
     }
 }

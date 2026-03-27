@@ -2,71 +2,74 @@ package devices;
 
 import org.citysim.city.City;
 import org.citysim.devices.AirSensor;
-import org.citysim.devices.CityDevice;
 import org.citysim.events.CityEventType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-@DisplayName("AirSensor test")
+@DisplayName("AirSensor tests")
 public class AirSensorTest {
-    @Test
-    @DisplayName("SetStrategy rejects null")
+
+    @Test @DisplayName("SetStrategy() rejects null")
     void setStrategy_rejects_null(){
+
         AirSensor sensor = new AirSensor("sensor");
 
         assertThrows(NullPointerException.class, () -> sensor.setStrategy(null));
     }
 
-    @Test
-    @DisplayName("PerformAction sends alert")
+    @Test @DisplayName("High pm25 sends alert")
     void performAction_sendsAlert(){
-        AirSensor sensor = new AirSensor("sensor");
-        sensor.setStrategy(history -> 999);
 
-        TestCity city = new TestCity();
+        City city = mock(City.class);
+        AirSensor sensor = new AirSensor("AS");
+
         sensor.setCity(city);
-
+        sensor.setStrategy(history -> 999.0);
         sensor.performAction();
 
-        assertEquals(CityEventType.ALERT, city.lastType);
+        verify(city).notifyListeners(
+                eq(sensor),
+                eq(CityEventType.ALERT),
+                contains("Poor air quality")
+        );
     }
 
-    @Test
-    @DisplayName("PerformAction sends status")
+    @Test @DisplayName("Normal pm25 sends status")
     void performAction_sendsStatus(){
-        AirSensor sensor = new AirSensor("sensor");
-        sensor.setStrategy(history -> 0);
 
-        TestCity city = new TestCity();
+        City city = mock(City.class);
+        AirSensor sensor = new AirSensor("AS");
+
         sensor.setCity(city);
-
+        sensor.setStrategy(history -> 1.0);
         sensor.performAction();
-        assertEquals(CityEventType.STATUS, city.lastType);
+
+        verify(city).notifyListeners(
+                eq(sensor),
+                eq(CityEventType.STATUS),
+                contains("Air OK")
+        );
     }
 
-    @Test
-    @DisplayName("History has max size")
+    @Test @DisplayName("History has max size")
     void performAction_maxHistory(){
-        AirSensor sensor = new AirSensor("sensor");
+
+        City city = mock(City.class);
+        AirSensor sensor = new AirSensor("AS");
+
         sensor.setStrategy(history -> 0);
-        TestCity city = new TestCity();
         sensor.setCity(city);
 
         for(int i = 0; i < 1000; i++){
             sensor.performAction();
         }
 
-        assertTrue(true);
-    }
-
-    static class TestCity extends City {
-        CityEventType lastType;
-
-        @Override
-        public void notifyListeners(CityDevice device, CityEventType type, String message) {
-            lastType = type;
-        }
+        assertTrue(sensor.getHistory().size() <= 100);
     }
 }

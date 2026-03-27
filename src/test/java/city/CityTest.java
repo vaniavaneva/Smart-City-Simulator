@@ -3,21 +3,29 @@ package city;
 import org.citysim.city.City;
 import org.citysim.concurrent.CityThreadPool;
 import org.citysim.devices.CityDevice;
+import org.citysim.devices.TrafficLight;
 import org.citysim.events.CityEventType;
 import org.citysim.factory.DeviceType;
 import org.citysim.observers.CityEventListener;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("City test")
+@DisplayName("City tests")
 public class CityTest {
-    @Test @DisplayName("Adds device and stores to city")
+
+    @Test @DisplayName("City adds device and stores to list")
     void addDevice_setCityStoreDevice(){
+
         City city = new City();
-        TestDevice device = new TestDevice();
+        CityDevice device = new CityDevice("test", 1, DeviceType.AIR_SENSOR) {
+            @Override public void performAction() {}
+        };
 
         city.addDevice(device);
         List<CityDevice> devices = city.getAllDevices();
@@ -26,10 +34,13 @@ public class CityTest {
         assertSame(city, device.getCity());
     }
 
-    @Test @DisplayName("GetAllDevices returns copy")
+    @Test @DisplayName("GetAllDevices() returns copy of list")
     void getAllDevices_returnsCopy(){
+
         City city = new City();
-        city.addDevice(new TestDevice());
+        city.addDevice(new CityDevice("test", 1, DeviceType.AIR_SENSOR) {
+            @Override public void performAction() {}
+        });
 
         List<CityDevice> list = city.getAllDevices();
 
@@ -37,73 +48,59 @@ public class CityTest {
         assertEquals(1, city.getAllDevices().size());
     }
 
-    @Test @DisplayName("All listeners are called")
+    @Test @DisplayName("NotifyListeners() calls listeners in list")
     void notifyListeners_callsAllListeners(){
+
         City city = new City();
-        TestListener listener = new TestListener();
+        AtomicBoolean called = new AtomicBoolean(false);
+        AtomicReference<String> capturedMessage = new AtomicReference<>();
+
+        CityEventListener listener = (device, type, message) -> {
+            called.set(true);
+            capturedMessage.set(message);
+        };
 
         city.addListener(listener);
 
-        TestDevice device = new TestDevice();
+        CityDevice device = new CityDevice("device", 1, DeviceType.AIR_SENSOR) {
+            @Override public void performAction() {}
+        };
 
         city.notifyListeners(device, CityEventType.STATUS, "test");
 
-        assertTrue(listener.called);
-        assertEquals("test", listener.message);
+        assertTrue(called.get());
+        assertEquals("test", capturedMessage.get());
     }
 
-    @Test @DisplayName("StartSimulation routes devices")
+    @Test @DisplayName("StartSimulation() routes devices")
     void startSimulation_routesDevices(){
+
         City city = new City();
-        CityThreadPool testPool = new CityThreadPool(2);
+        CityThreadPool pool = new CityThreadPool(2);
 
-        city.setThreadPool(testPool);
+        city.setThreadPool(pool);
 
-        TestTrafficLight light = new TestTrafficLight();
-        TestDevice device = new TestDevice();
+        AtomicBoolean performed = new AtomicBoolean(false);
+        AtomicBoolean scheduled = new AtomicBoolean(false);
+
+        TrafficLight light = new TrafficLight("test"){
+            @Override public void performAction() {
+                performed.set(true);
+            }
+        };
+        CityDevice device = new CityDevice("device", 1, DeviceType.AIR_SENSOR) {
+            @Override public void performAction() {
+                scheduled.set(true);
+            }
+        };
 
         city.addDevice(light);
         city.addDevice(device);
-
         city.startSimulation();
 
-        assertTrue(light.performed);
-        assertTrue(device.scheduled);
-    }
+        assertTrue(performed.get());
+        assertTrue(scheduled.get());
 
-    static class TestDevice extends CityDevice{
-        boolean scheduled = false;
-
-        TestDevice() {
-            super("testDevice", 1, DeviceType.AIR_SENSOR);
-        }
-
-        @Override public void performAction() {}
-
-        @Override public void schedule(CityThreadPool pool){
-            scheduled = true;
-        }
-    }
-    static class TestListener implements CityEventListener{
-        boolean called = false;
-        String message;
-
-        @Override public void onEvent(CityDevice device, CityEventType type, String message){
-            called = true;
-            this.message = message;
-        }
-    }
-    static class TestTrafficLight extends CityDevice {
-        boolean performed = false;
-
-        TestTrafficLight(){
-            super("testTrafficLight", 2, DeviceType.TRAFFIC_LIGHT);
-        }
-
-        @Override public void performAction(){
-            performed = true;
-        }
-
-        @Override public void schedule(CityThreadPool pool) {}
+        pool.safeShutdown(1, TimeUnit.SECONDS);
     }
 }

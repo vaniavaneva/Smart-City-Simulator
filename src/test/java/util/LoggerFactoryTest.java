@@ -9,10 +9,12 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("LoggerFactory Test")
+@DisplayName("LoggerFactory test")
 public class LoggerFactoryTest {
-    @Test
+
+    @Test @DisplayName("Logs info")
     void logger_test(){
+
         Logger logger = LoggerFactory.getLogger("TEST");
         assertNotNull(logger);
         assertTrue(logger.getHandlers().length > 0);

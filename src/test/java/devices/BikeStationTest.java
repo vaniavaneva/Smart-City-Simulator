@@ -3,7 +3,6 @@ package devices;
 import org.citysim.city.City;
 import org.citysim.concurrent.CityThreadPool;
 import org.citysim.devices.BikeStation;
-import org.citysim.devices.CityDevice;
 import org.citysim.events.CityEventType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,14 +13,23 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-@DisplayName("BikeStation test")
+@DisplayName("BikeStation tests")
 public class BikeStationTest {
-    @Test
-    @DisplayName("Rent bike works")
+
+    @Test @DisplayName("PerformAction() rents bikes [0.0 - 0.4) 40%")
     void rent_bike(){
-        TestBikeStation bike = new TestBikeStation(0.1);
-        TestCity city = new TestCity();
+
+        BikeStation bike = new BikeStation("BS") {
+            @Override protected double random() {
+                return 0.1; // RENT
+            }
+        };
+        City city = mock(City.class);
 
         bike.setCity(city);
         bike.setCapacity(5,5);
@@ -31,14 +39,22 @@ public class BikeStationTest {
         bike.performAction();
 
         assertEquals(2, bike.getBikesAvailable());
-        assertTrue(city.events.contains(CityEventType.BIKE_RENTED));
+        verify(city).notifyListeners(
+                eq(bike),
+                eq(CityEventType.BIKE_RENTED),
+                contains("Bike rented")
+        );
     }
 
-    @Test
-    @DisplayName("Return bike works")
+    @Test @DisplayName("PerformAction() returns bikes [0.4 - 0.8) 40%")
     void return_bike(){
-        TestBikeStation bike = new TestBikeStation(0.6);
-        TestCity city = new TestCity();
+
+        BikeStation bike = new BikeStation("BS") {
+            @Override protected double random() {
+                return 0.6; // RETURN
+            }
+        };
+        City city = mock(City.class);
 
         bike.setCity(city);
         bike.setCapacity(5,5);
@@ -48,66 +64,57 @@ public class BikeStationTest {
         bike.performAction();
 
         assertEquals(3, bike.getBikesAvailable());
-        assertTrue(city.events.contains(CityEventType.BIKE_RETURNED));
+        verify(city).notifyListeners(
+                eq(bike),
+                eq(CityEventType.BIKE_RETURNED),
+                contains("Bike returned")
+        );
     }
 
-    @Test
-    @DisplayName("Charging bike works")
+    @Test @DisplayName("PerformAction() charges bikes [0.8 - 1.0) 20%")
     void charge_bike(){
-        TestBikeStation s = new TestBikeStation(0.95);
-        TestCity city = new TestCity();
+
+        BikeStation bike = new BikeStation("BS") {
+            @Override protected double random() {
+                return 0.95; // CHARGE
+            }
+        };
+        City city = new City();
         CityThreadPool pool = new CityThreadPool(1);
 
-        s.setCity(city);
         city.setThreadPool(pool);
-        s.setChargers(1,1);
+        bike.setCity(city);
+        bike.setChargers(1,1);
 
-        s.performAction();
+        List<CityEventType> events = new ArrayList<>();
+        city.addListener((device, type, message) -> events.add(type));
 
-        assertTrue(city.events.contains(CityEventType.BIKE_CHARGING));
+        bike.performAction();
+
+        assertTrue(events.contains(CityEventType.BIKE_CHARGING));
         pool.safeShutdown(1, TimeUnit.SECONDS);
     }
 
-    @Test
-    @DisplayName("No bikes sends alert")
-    void noBikes_alert(){
-        TestBikeStation s = new TestBikeStation(0.1);
-        TestCity city = new TestCity();
-        s.setCity(city);
+    @Test @DisplayName("NotifyListeners() sends alert for no bikes")
+    void noBikes_alert() {
 
-        s.setCapacity(5,5);
-        s.setBikesAvailable(0,0);
-        s.setChargers(2,2);
+        BikeStation bike = new BikeStation("BS");
+        City city = mock(City.class);
+        CityThreadPool pool = new CityThreadPool(1);
+        city.setThreadPool(pool);
+        bike.setCity(city);
 
-        s.performAction();
+        bike.setCapacity(1, 1);
+        bike.setBikesAvailable(0, 0);
+        bike.setChargers(1, 1);
 
-        assertTrue(city.events.contains(CityEventType.ALERT));
-    }
+        bike.performAction();
 
-    static class TestBikeStation extends BikeStation{
-        private double random;
-
-        TestBikeStation(double random){
-            super("station");
-            this.random=random;
-        }
-
-        void setRandom(double r){
-            random = r;
-        }
-
-        @Override
-        protected double random(){
-            return random;
-        }
-    }
-
-    static class TestCity extends City {
-        List<CityEventType> events = new ArrayList<>();
-
-        @Override
-        public void notifyListeners(CityDevice device, CityEventType type, String message){
-            events.add(type);
-        }
+        verify(city).notifyListeners(
+                eq(bike),
+                eq(CityEventType.ALERT),
+                contains("No bikes available")
+        );
+        pool.safeShutdown(1, TimeUnit.SECONDS);
     }
 }

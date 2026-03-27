@@ -11,7 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("MessageOnlyFormatter Test")
 public class MessageOnlyFormatterTest {
-    @Test
+
+    @Test @DisplayName("Displays only message")
     void message_test(){
         MessageOnlyFormatter f = new MessageOnlyFormatter();
         LogRecord r = new LogRecord(Level.INFO, "Test");

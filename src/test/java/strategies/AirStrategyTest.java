@@ -10,28 +10,28 @@ import java.util.Deque;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("AirStrategies Test")
+@DisplayName("AirStrategies tests")
 public class AirStrategyTest {
 
     private final AverageStrategy avgStrategy = new AverageStrategy();
     private final PeakDetectionStrategy peakStrategy = new PeakDetectionStrategy();
 
-    @Test
-    @DisplayName("Empty measurements returns 0")
+    @Test @DisplayName("Empty measurements return 0")
     void empty_return(){
+
         assertEquals(0, avgStrategy.analyzeQuality(new ArrayDeque<>()));
         assertEquals(0, peakStrategy.analyzeQuality(new ArrayDeque<>()));
     }
 
-    @Test
-    @DisplayName("Null measurements return 0")
+    @Test @DisplayName("Null measurements return 0")
     void null_return(){
+
         assertEquals(0, avgStrategy.analyzeQuality(null));
     }
 
-    @Test
-    @DisplayName("Weighted average, ignore negative")
+    @Test @DisplayName("Weighted average ignores negative")
     void weighted_negative(){
+
         Deque<Double> data = new ArrayDeque<>();
         data.add(10.0);
         data.add(20.0);
@@ -44,20 +44,9 @@ public class AirStrategyTest {
         assertEquals(23.33, result, 0.01);
     }
 
-    /*@Test
-    @DisplayName("Ignore negative values")
-    void ignore_neg(){
-        Deque<Double> data = new ArrayDeque<>();
-        data.add(-10.0);
-        data.add(20.0);
-
-        double result = avgStrategy.analyzeQuality(data);
-        assertEquals(20.0, result, 0.01);
-    }*/
-
-    @Test
-    @DisplayName("Find max value")
+    @Test @DisplayName("PeakStrategy calculates max value")
     void max_value(){
+
         Deque<Double> data = new ArrayDeque<>();
         data.add(10.0);
         data.add(50.0);
@@ -66,9 +55,9 @@ public class AirStrategyTest {
         assertEquals(50.0, peakStrategy.analyzeQuality(data));
     }
 
-    @Test
-    @DisplayName("Handle single value")
+    @Test @DisplayName("Strategy handles single value")
     void single_value(){
+
         Deque<Double> data = new ArrayDeque<>();
         data.add(10.0);
 
