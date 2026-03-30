@@ -81,7 +81,7 @@ java/
 - Maven 3.8+
 
 ### Steps 
-Run with Maven
+Run with Maven:
 ```bash
 git clone https://github.com/vaniavaneva/Smart-City-Simulator.git
 cd Smart-City-Simulator
@@ -121,9 +121,9 @@ A typical simulation run includes:
 3. Bike stations handling rentals, returns and charging concurrently 
 4. Street lights activating automatically based on time of day 
 5. Events being dispatched to: 
-	-Dashboard (visual monitoring) 
-	-AlertSystem (threshold warnings) 
-	-DataLogger (persistent logs) 
+	- Dashboard (visual monitoring) 
+	- AlertSystem (threshold warnings) 
+	- DataLogger (persistent logs) 
 
 Example console output:
 ```bash
