@@ -15,60 +15,60 @@ The system uses **event-driven architecture**, **strategy pattern**, and **concu
 - Multithreading via ScheduledExecutorService
 
 ## Architecture
-java/ 
-├── org.citysim/ 
-│ ├─── city/ 
-│ │ └── City.java 
-│ │  
-│ ├───concurrent/ 
-│ │ └── CityThreadPool.java 
-│ │ 
-│ ├───devices/ 
-│ │ ├── AirSensor.java 
-│ │ ├── BikeStation.java 
-│ │ ├── CityDevice.java 
-│ │ ├── LightSensor.java 
-│ │ ├── StreetLight.java 
-│ │ ├── TrafficLight.java 
-│ │ └── TrafficLightState.java 
-│ │ 
-│ ├───engine/ 
-│ │ └── SimulationEngine.java 
-│ 
-│ ├───events/ 
-│ │ └── CityEventType.java 
-│ 
-│ ├───factory/ 
-│ │ ├── DeviceFactory.java 
-│ │ └── DeviceType.java 
-│ 
-│ ├───observers/ 
-│ │ ├── AlertSystem.java 
-│ │ ├── CityEventListener.java 
-│ │ ├── Dashboard.java 
-│ │ └── DataLogger.java 
-│ 
-│ ├───strategies/ 
-│ │ ├───air/ 
-│ │ │ ├── AirAnalysisStrategy.java 
-│ │ │ ├── AverageStrategy.java 
-│ │ │ └── PeakDetectionStrategy.java 
-│ │ │ 
-│ │ ├───traffic/ 
-│ │ │ ├── AdaptiveTrafficStrategy.java 
-│ │ │ ├── FixedCycleStrategy.java 
-│ │ │ └── TrafficStrategy.java 
-│ 
-│ ├───util/ 
-│ │ ├── ColorFormatter.java 
-│ │ ├── ConfigLoader.java 
-│ │ ├── LoggerFactory.java 
-│ │ └── MessageOnlyFormatter.java 
-│ 
-│ ├───Main.java 
-│ 
-├───resources/ 
-│ └── config.properties 
+- java/ 
+- ├── org.citysim/ 
+- │ ├─── city/ 
+- │ │ └── City.java 
+- │ │  
+- │ ├───concurrent/ 
+- │ │ └── CityThreadPool.java 
+- │ │ 
+- │ ├───devices/ 
+- │ │ ├── AirSensor.java 
+- │ │ ├── BikeStation.java 
+- │ │ ├── CityDevice.java 
+- │ │ ├── LightSensor.java 
+- │ │ ├── StreetLight.java 
+- │ │ ├── TrafficLight.java 
+- │ │ └── TrafficLightState.java 
+- │ │ 
+- │ ├───engine/ 
+- │ │ └── SimulationEngine.java 
+- │ 
+- │ ├───events/ 
+- │ │ └── CityEventType.java 
+- │ 
+- │ ├───factory/ 
+- │ │ ├── DeviceFactory.java 
+- │ │ └── DeviceType.java 
+- │ 
+- │ ├───observers/ 
+- │ │ ├── AlertSystem.java 
+- │ │ ├── CityEventListener.java 
+- │ │ ├── Dashboard.java 
+- │ │ └── DataLogger.java 
+- │ 
+- │ ├───strategies/ 
+- │ │ ├───air/ 
+- │ │ │ ├── AirAnalysisStrategy.java 
+- │ │ │ ├── AverageStrategy.java 
+- │ │ │ └── PeakDetectionStrategy.java 
+- │ │ │ 
+- │ │ ├───traffic/ 
+- │ │ │ ├── AdaptiveTrafficStrategy.java 
+- │ │ │ ├── FixedCycleStrategy.java 
+- │ │ │ └── TrafficStrategy.java 
+- │ 
+- │ ├───util/ 
+- │ │ ├── ColorFormatter.java 
+- │ │ ├── ConfigLoader.java 
+- │ │ ├── LoggerFactory.java 
+- │ │ └── MessageOnlyFormatter.java 
+- │ 
+- │ ├───Main.java 
+- │ 
+- ├───resources/ 
+- │ └── config.properties 
  
 ### Design Patterns used
 - **Observer Pattern** – event system
@@ -102,9 +102,9 @@ The simulation behavior can be customized via:
 
 Examples of configurable parameters: 
  
-Number of devices 
-Simulation speed 
-Air quality thresholds 
+- Number of devices 
+- Simulation speed 
+- Air quality thresholds 
  
 ## CI pipeline (GitHub Actions)
 //tba
