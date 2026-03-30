@@ -76,7 +76,7 @@ java/
 - **Factory Pattern** – device creation
 
 ## Running the Project
-###Prerequisites
+### Prerequisites
 - Java 17+
 - Maven 3.8+
 
@@ -111,15 +111,15 @@ Air quality thresholds
 ## JavaDoc
 //tba
 
-##Example Scenario / Demo
+## Example Scenario / Demo
 
 A typical simulation run includes:
 
 1. Traffic lights switching between red, green and yellow
 2. Air sensors collecting pollution data with strategies
-3.Bike stations handling rentals, returns and charging concurrently
-4.Street lights activating automatically based on time of day
-5.Events being dispatched to:
+3. Bike stations handling rentals, returns and charging concurrently
+4. Street lights activating automatically based on time of day
+5. Events being dispatched to:
 	-Dashboard (visual monitoring)
 	-AlertSystem (threshold warnings)
 	-DataLogger (persistent logs)
@@ -134,5 +134,5 @@ Example console output:
 [ALERT] {BS-02} Charger levels low (0)
 ```
 
-##Future Improvements
-###Rest API - simulation monitoring panel
+## Future Improvements
+### Rest API - simulation monitoring panel
