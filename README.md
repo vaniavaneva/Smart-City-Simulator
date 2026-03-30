@@ -15,61 +15,61 @@ The system uses **event-driven architecture**, **strategy pattern**, and **concu
 - Multithreading via ScheduledExecutorService
 
 ## Architecture
-java/
-├── org.citysim/
-│ ├─── city/
-│ │ └── City.java
+java/ 
+├── org.citysim/ 
+│ ├─── city/ 
+│ │ └── City.java 
+│ │  
+│ ├───concurrent/ 
+│ │ └── CityThreadPool.java 
 │ │ 
-│ ├───concurrent/
-│ │ └── CityThreadPool.java
-│ │
-│ ├───devices/
-│ │ ├── AirSensor.java
-│ │ ├── BikeStation.java
-│ │ ├── CityDevice.java
-│ │ ├── LightSensor.java
-│ │ ├── StreetLight.java
-│ │ ├── TrafficLight.java
-│ │ └── TrafficLightState.java
-│ │
-│ ├───engine/
-│ │ └── SimulationEngine.java
-│
-│ ├───events/
-│ │ └── CityEventType.java
-│
-│ ├───factory/
-│ │ ├── DeviceFactory.java
-│ │ └── DeviceType.java
-│
-│ ├───observers/
-│ │ ├── AlertSystem.java
-│ │ ├── CityEventListener.java
-│ │ ├── Dashboard.java
-│ │ └── DataLogger.java
-│
-│ ├───strategies/
-│ │ ├───air/
-│ │ │ ├── AirAnalysisStrategy.java
-│ │ │ ├── AverageStrategy.java
-│ │ │ └── PeakDetectionStrategy.java
-│ │ │
-│ │ ├───traffic/
-│ │ │ ├── AdaptiveTrafficStrategy.java
-│ │ │ ├── FixedCycleStrategy.java
-│ │ │ └── TrafficStrategy.java
-│
-│ ├───util/
-│ │ ├── ColorFormatter.java
-│ │ ├── ConfigLoader.java
-│ │ ├── LoggerFactory.java
-│ │ └── MessageOnlyFormatter.java
-│
-│ ├───Main.java
-│
-├───resources/
-│ └── config.properties
-
+│ ├───devices/ 
+│ │ ├── AirSensor.java 
+│ │ ├── BikeStation.java 
+│ │ ├── CityDevice.java 
+│ │ ├── LightSensor.java 
+│ │ ├── StreetLight.java 
+│ │ ├── TrafficLight.java 
+│ │ └── TrafficLightState.java 
+│ │ 
+│ ├───engine/ 
+│ │ └── SimulationEngine.java 
+│ 
+│ ├───events/ 
+│ │ └── CityEventType.java 
+│ 
+│ ├───factory/ 
+│ │ ├── DeviceFactory.java 
+│ │ └── DeviceType.java 
+│ 
+│ ├───observers/ 
+│ │ ├── AlertSystem.java 
+│ │ ├── CityEventListener.java 
+│ │ ├── Dashboard.java 
+│ │ └── DataLogger.java 
+│ 
+│ ├───strategies/ 
+│ │ ├───air/ 
+│ │ │ ├── AirAnalysisStrategy.java 
+│ │ │ ├── AverageStrategy.java 
+│ │ │ └── PeakDetectionStrategy.java 
+│ │ │ 
+│ │ ├───traffic/ 
+│ │ │ ├── AdaptiveTrafficStrategy.java 
+│ │ │ ├── FixedCycleStrategy.java 
+│ │ │ └── TrafficStrategy.java 
+│ 
+│ ├───util/ 
+│ │ ├── ColorFormatter.java 
+│ │ ├── ConfigLoader.java 
+│ │ ├── LoggerFactory.java 
+│ │ └── MessageOnlyFormatter.java 
+│ 
+│ ├───Main.java 
+│ 
+├───resources/ 
+│ └── config.properties 
+ 
 ### Design Patterns used
 - **Observer Pattern** – event system
 - **Strategy Pattern** – dynamic behavior
@@ -80,7 +80,8 @@ java/
 - Java 17+
 - Maven 3.8+
 
-### Steps (Run with Maven)
+### Steps 
+Run with Maven
 ```bash
 git clone https://github.com/vaniavaneva/Smart-City-Simulator.git
 cd Smart-City-Simulator
@@ -99,12 +100,12 @@ Run Main.java
 The simulation behavior can be customized via:
 `resources/config.properties`
 
-Examples of configurable parameters:
-
-Number of devices
-Simulation speed
-Air quality thresholds
-
+Examples of configurable parameters: 
+ 
+Number of devices 
+Simulation speed 
+Air quality thresholds 
+ 
 ## CI pipeline (GitHub Actions)
 //tba
 
@@ -115,14 +116,14 @@ Air quality thresholds
 
 A typical simulation run includes:
 
-1. Traffic lights switching between red, green and yellow
-2. Air sensors collecting pollution data with strategies
-3. Bike stations handling rentals, returns and charging concurrently
-4. Street lights activating automatically based on time of day
-5. Events being dispatched to:
-	-Dashboard (visual monitoring)
-	-AlertSystem (threshold warnings)
-	-DataLogger (persistent logs)
+1. Traffic lights switching between red, green and yellow 
+2. Air sensors collecting pollution data with strategies 
+3. Bike stations handling rentals, returns and charging concurrently 
+4. Street lights activating automatically based on time of day 
+5. Events being dispatched to: 
+	-Dashboard (visual monitoring) 
+	-AlertSystem (threshold warnings) 
+	-DataLogger (persistent logs) 
 
 Example console output:
 ```bash
