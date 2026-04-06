@@ -10,6 +10,7 @@ import org.citysim.observers.CityEventListener;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -73,7 +74,7 @@ public class CityTest {
     }
 
     @Test @DisplayName("StartSimulation() routes devices")
-    void startSimulation_routesDevices(){
+    void startSimulation_routesDevices() throws InterruptedException {
 
         City city = new City();
         CityThreadPool pool = new CityThreadPool(2);
@@ -83,24 +84,31 @@ public class CityTest {
         AtomicBoolean performed = new AtomicBoolean(false);
         AtomicBoolean scheduled = new AtomicBoolean(false);
 
+        CountDownLatch latch = new CountDownLatch(2);
+
         TrafficLight light = new TrafficLight("test"){
             @Override public void performAction() {
                 performed.set(true);
+                latch.countDown();
             }
         };
         CityDevice device = new CityDevice("device", 1, DeviceType.AIR_SENSOR) {
             @Override public void performAction() {
                 scheduled.set(true);
+                latch.countDown();
             }
         };
 
         city.addDevice(light);
         city.addDevice(device);
-        city.startSimulation();
 
+        city.startSimulation();
+        boolean completed = latch.await(2, TimeUnit.SECONDS);
+
+        pool.safeShutdown(2, TimeUnit.SECONDS);
+
+        assertTrue(completed);
         assertTrue(performed.get());
         assertTrue(scheduled.get());
-
-        pool.safeShutdown(1, TimeUnit.SECONDS);
     }
 }

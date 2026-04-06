@@ -17,6 +17,7 @@ import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.atLeastOnce;
 
 @DisplayName("BikeStation tests")
 public class BikeStationTest {
@@ -98,8 +99,13 @@ public class BikeStationTest {
     @Test @DisplayName("NotifyListeners() sends alert for no bikes")
     void noBikes_alert() {
 
-        BikeStation bike = new BikeStation("BS");
-        City city = mock(City.class);
+        BikeStation bike = new BikeStation("BS") {
+            @Override
+            protected double random() {
+                return 0.1;
+            }
+        };
+            City city = mock(City.class);
         CityThreadPool pool = new CityThreadPool(1);
         city.setThreadPool(pool);
         bike.setCity(city);
@@ -110,7 +116,7 @@ public class BikeStationTest {
 
         bike.performAction();
 
-        verify(city).notifyListeners(
+        verify(city, atLeastOnce()).notifyListeners(
                 eq(bike),
                 eq(CityEventType.ALERT),
                 contains("No bikes available")

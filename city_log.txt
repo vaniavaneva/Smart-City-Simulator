@@ -1,37 +1,12 @@
-All traffic lights changed 72 times.
+All traffic lights changed 4 times.
 
-Street lights were ON for 71,43% of the simulation.
+Street lights were ON for 0,00% of the simulation.
 
-Bikes were rented 8 times.
+Bikes were rented 0 times.
 
-Bikes were returned 4 times.
+Bikes were returned 0 times.
 
-Bikes were charged 2 times.
+Bikes were charged 0 times.
 
-Alerts occurred: 25
+Alerts occurred: 0
 
-	AS-04 Poor air quality PM2.5=66,58
-	AS-03 Poor air quality PM2.5=72,06
-	AS-04 Poor air quality PM2.5=38,61
-	AS-03 Poor air quality PM2.5=60,37
-	AS-01 Poor air quality PM2.5=75,28
-	AS-04 Poor air quality PM2.5=20,44
-	AS-03 Poor air quality PM2.5=53,81
-	AS-01 Poor air quality PM2.5=72,88
-	AS-02 Poor air quality PM2.5=78,34
-	AS-04 Poor air quality PM2.5=20,19
-	AS-03 Poor air quality PM2.5=56,32
-	AS-01 Poor air quality PM2.5=64,19
-	AS-02 Poor air quality PM2.5=37,08
-	AS-04 Poor air quality PM2.5=52,35
-	AS-01 Poor air quality PM2.5=75,47
-	AS-02 Poor air quality PM2.5=61,63
-	AS-04 Poor air quality PM2.5=54,04
-	AS-01 Poor air quality PM2.5=44,70
-	AS-02 Poor air quality PM2.5=59,09
-	AS-04 Poor air quality PM2.5=69,98
-	AS-01 Poor air quality PM2.5=78,90
-	AS-02 Poor air quality PM2.5=56,39
-	AS-04 Poor air quality PM2.5=75,58
-	AS-01 Poor air quality PM2.5=52,13
-	AS-02 Poor air quality PM2.5=25,12
